@@ -336,11 +336,14 @@
                 if (data.data && data.data.length > 0) {
                     app.innerHTML = renderArtwork(data.data[0]);
                 } else {
-                    app.innerHTML = renderError('Произведение не найдено. Обновите страницу для повторной попытки.');
+                    console.log('⚠️ Произведение не найдено, перезагружаем страницу...');
+                    setTimeout(() => location.reload(), 500);
                 }
             } catch (error) {
                 console.error('❌ Ошибка:', error);
-                app.innerHTML = renderError(`Не удалось загрузить произведение: ${error.message}`);
+                // Показываем сообщение на 1 секунду, затем перезагружаем
+                app.innerHTML = `<div class="loading">Ошибка загрузки, повторная попытка</div>`;
+                setTimeout(() => location.reload(), 1000);
             }
         }
 
