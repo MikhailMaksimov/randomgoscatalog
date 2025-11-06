@@ -13,29 +13,60 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            background: #000;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Звёздное небо */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent),
+                radial-gradient(1px 1px at 15% 60%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
+            perspective: 1500px;
+            position: relative;
+            z-index: 1;
+            padding: 80px 20px 60px;
         }
 
         .header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
-            margin-bottom: 40px;
-            animation: fadeIn 0.6s ease-in;
+            z-index: 10;
         }
 
         .header p {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 1.4rem;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 300;
         }
 
         .loading {
@@ -45,124 +76,150 @@
             animation: pulse 1.5s ease-in-out infinite;
         }
 
-        .loading::after {
-            content: '...';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        .image-container {
+        .artwork-container {
             width: 100%;
-            aspect-ratio: 4/3;
-            background: #f5f5f5;
+            max-width: 1400px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            position: relative;
+            animation: fadeIn 1s ease-in;
         }
 
-        .image-container img {
+        /* Верхний текст (название и автор) - уходит ВНИЗ к изображению */
+        .text-top {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            animation: fadeIn 0.6s ease-in;
-        }
-
-        .no-image {
-            color: #999;
+            max-width: 900px;
             text-align: center;
-            padding: 40px;
-        }
-
-        .content {
-            padding: 40px;
+            margin-bottom: 30px; /* Уменьшено с 60px до 30px */
+            transform: perspective(800px) rotateX(-20deg);
+            transform-origin: top center;
+            padding: 0 20px;
         }
 
         .title {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 3rem);
             font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 30px;
-            line-height: 1.3;
+            color: #edfc86;
+            margin-bottom: 15px; /* Уменьшено с 20px до 15px */
+            line-height: 1.2;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 0.05em;
         }
 
-        .info-section {
-            margin-bottom: 24px;
+        .author {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            letter-spacing: 0.08em;
+        }
+
+        /* Изображение с прямоугольной маской */
+        .image-container {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            margin: 20px 0; /* Уменьшено с 40px до 20px */
+            padding: 0 20px;
+        }
+
+        .image-mask {
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 80px rgba(255, 215, 0, 0.3),
+                inset 0 0 100px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Эффект появления из темноты - размытые края */
+        .image-mask::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(to right, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%),
+                linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.9) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Внешнее свечение */
+        .image-mask::after {
+            content: '';
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(ellipse at center, transparent 40%, black 100%);
+            filter: blur(40px);
+            z-index: -1;
+        }
+
+        .image-mask img {
+            width: 100%;
+            height: auto;
+            display: block;
+            position: relative;
+            z-index: 1;
+            filter: brightness(0.9) contrast(1.1);
+            opacity: 0;
+            transform: scale(1.05);
+            transition: opacity 1.5s ease-out, transform 2s ease-out;
+        }
+
+        .image-mask img.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .no-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Нижний текст (музей, период, техника) - уходит ВВЕРХ к изображению */
+        .text-bottom {
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+            margin-top: 30px; /* Уменьшено с 60px до 30px */
+           /*  transform: perspective(800px) rotateX(20deg); */
+            transform-origin: bottom center;
+            padding: 0 20px;
+        }
+
+        .info-row {
+            margin: 12px 0; /* Уменьшено с 15px до 12px */
         }
 
         .info-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #888;
-            margin-bottom: 6px;
+            letter-spacing: 0.15em;
+            color: rgba(255, 215, 0, 0.7);
+            margin-bottom: 4px; /* Уменьшено с 5px до 4px */
             font-weight: 600;
         }
 
         .info-value {
-            font-size: 1.1rem;
-            color: #333;
-            line-height: 1.5;
-        }
-
-        .id-section {
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 20px;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+            letter-spacing: 0.05em;
         }
 
         .id-value {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .error {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        .error h2 {
-            color: #e74c3c;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .error p {
-            color: #666;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        .error button {
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .error button:hover {
-            transform: scale(1.05);
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 20px; /* Уменьшено с 30px до 20px */
+            letter-spacing: 0.1em;
         }
 
         @keyframes fadeIn {
@@ -174,37 +231,130 @@
             }
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @keyframes pulse {
             0%, 100% {
                 opacity: 1;
             }
             50% {
-                opacity: 0.5;
+                opacity: 0.4;
             }
         }
 
+        /* Новая анимация для изображения */
+        @keyframes imageReveal {
+            0% {
+                opacity: 0;
+                transform: scale(1.08);
+                filter: brightness(0.3) contrast(0.7);
+            }
+            70% {
+                opacity: 0.8;
+                filter: brightness(0.8) contrast(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                filter: brightness(0.9) contrast(1.1);
+            }
+        }
+
+        .image-reveal {
+            animation: imageReveal 2.5s ease-out forwards;
+        }
+
+        /* Адаптивность для планшетов */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 70px 15px 50px;
+            }
+
+            .text-top {
+                margin-bottom: 25px; /* Уменьшено с 50px до 25px */
+            }
+
+            .text-bottom {
+                margin-top: 25px; /* Уменьшено с 50px до 25px */
+            }
+
+            .image-container {
+                max-width: 700px;
+                margin: 15px 0; /* Уменьшено */
+            }
+        }
+
+        /* Адаптивность для мобильных */
         @media (max-width: 768px) {
+            .container {
+                padding: 60px 10px 40px;
+            }
+
             .header p {
-                font-size: 1.1rem;
+                font-size: 0.65rem;
+                padding: 0 10px;
             }
 
-            .content {
-                padding: 30px;
+            .text-top {
+                margin-bottom: 20px; /* Уменьшено с 40px до 20px */
+                transform: perspective(500px) rotateX(-15deg);
             }
 
-            .title {
-                font-size: 1.5rem;
+            .text-bottom {
+                margin-top: 20px; /* Уменьшено с 40px до 20px */
+                transform: perspective(500px) rotateX(15deg);
+            }
+
+            .image-container {
+                max-width: 100%;
+                margin: 15px 0; /* Уменьшено */
+            }
+
+            .image-mask {
+                border-radius: 8px;
+            }
+
+            .info-row {
+                margin: 10px 0; /* Уменьшено */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 50px 10px 30px;
+            }
+
+            .text-top {
+                margin-bottom: 15px; /* Уменьшено с 30px до 15px */
+            }
+
+            .text-bottom {
+                margin-top: 15px; /* Уменьшено с 30px до 15px */
+            }
+
+            .info-row {
+                margin: 8px 0; /* Уменьшено с 12px до 8px */
+            }
+
+            .id-value {
+                margin-top: 15px; /* Уменьшено */
+            }
+        }
+
+        /* Для очень больших экранов */
+        @media (min-width: 1920px) {
+            .container {
+                padding: 100px 40px 80px;
+            }
+
+            .artwork-container {
+                max-width: 1600px;
+            }
+
+            .image-container {
+                max-width: 1200px;
+            }
+
+            .text-top, .text-bottom {
+                max-width: 1200px;
             }
         }
     </style>
@@ -216,7 +366,7 @@
         </div>
 
         <div id="app">
-            <div class="loading">Загрузка произведения</div>
+            <div class="loading">Загрузка произведения...</div>
         </div>
     </div>
 
@@ -259,60 +409,50 @@
             console.log('Rendering artwork:', { name, authors, technologies, museum, period, nativeId, imageUrl });
 
             return `
-                <div class="card">
-                    ${imageUrl ? `
-                        <div class="image-container">
-                            <img src="${imageUrl}" 
-                                 alt="${name}" 
-                                 onerror="this.parentElement.innerHTML='<div class=no-image><p>Изображение недоступно</p></div>'">
+                <div class="artwork-container">
+                    <!-- Верхний текст - уходит вниз к изображению -->
+                    <div class="text-top">
+                        <h1 class="title">${name}</h1>
+                        ${authors ? `<div class="author">${authors}</div>` : ''}
+                    </div>
+
+                    <!-- Изображение с прямоугольной маской -->
+                    <div class="image-container">
+                        <div class="image-mask">
+                            ${imageUrl ? `
+                                <img src="${imageUrl}" 
+                                     alt="${name}" 
+                                     onload="this.classList.add('image-reveal')"
+                                     onerror="this.parentElement.innerHTML='<div class=no-image>Изображение недоступно</div>'">
+                            ` : '<div class="no-image">Изображение отсутствует</div>'}
                         </div>
-                    ` : '<div class="image-container"><div class="no-image"><p>Изображение отсутствует</p></div></div>'}
-                    
-                    <div class="content">
-                        <h2 class="title">${name}</h2>
-                        
-                        ${authors ? `
-                            <div class="info-section">
-                                <div class="info-label">Автор</div>
-                                <div class="info-value">${authors}</div>
-                            </div>
-                        ` : ''}
-                        
+                    </div>
+
+                    <!-- Нижний текст - уходит вверх к изображению -->
+                    <div class="text-bottom">
                         ${museum ? `
-                            <div class="info-section">
+                            <div class="info-row">
                                 <div class="info-label">Музей</div>
                                 <div class="info-value">${museum}</div>
                             </div>
                         ` : ''}
                         
                         ${period ? `
-                            <div class="info-section">
+                            <div class="info-row">
                                 <div class="info-label">Период</div>
                                 <div class="info-value">${period}</div>
                             </div>
                         ` : ''}
                         
                         ${technologies ? `
-                            <div class="info-section">
+                            <div class="info-row">
                                 <div class="info-label">Техника</div>
                                 <div class="info-value">${technologies}</div>
                             </div>
                         ` : ''}
 
-                        <div class="id-section">
-                            <div class="id-value">ID: ${nativeId}</div>
-                        </div>
+                        <div class="id-value">ID: ${nativeId}</div>
                     </div>
-                </div>
-            `;
-        }
-
-        function renderError(message) {
-            return `
-                <div class="error">
-                    <h2>Ошибка загрузки</h2>
-                    <p>${message}</p>
-                    <button onclick="location.reload()">Попробовать снова</button>
                 </div>
             `;
         }
@@ -341,7 +481,6 @@
                 }
             } catch (error) {
                 console.error('❌ Ошибка:', error);
-                // Показываем сообщение на 1 секунду, затем перезагружаем
                 app.innerHTML = `<div class="loading">Ошибка загрузки, повторная попытка</div>`;
                 setTimeout(() => location.reload(), 1000);
             }
