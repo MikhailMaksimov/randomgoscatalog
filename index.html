@@ -67,6 +67,19 @@
             text-transform: uppercase;
             letter-spacing: 0.2em;
             font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        /* Разделительная линия после заголовка */
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
         }
 
         .loading {
@@ -91,8 +104,8 @@
             width: 100%;
             max-width: 900px;
             text-align: center;
-            margin-bottom: 30px; /* Уменьшено с 60px до 30px */
-            transform: perspective(800px) rotateX(-20deg);
+            margin-bottom: 30px;
+            transform: perspective(800px) rotateX(-40deg);
             transform-origin: top center;
             padding: 0 20px;
         }
@@ -101,7 +114,7 @@
             font-size: clamp(1.5rem, 4vw, 3rem);
             font-weight: 700;
             color: #edfc86;
-            margin-bottom: 15px; /* Уменьшено с 20px до 15px */
+            margin-bottom: 15px;
             line-height: 1.2;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             letter-spacing: 0.05em;
@@ -119,7 +132,7 @@
             width: 100%;
             max-width: 900px;
             position: relative;
-            margin: 20px 0; /* Уменьшено с 40px до 20px */
+            margin: 20px 0;
             padding: 0 20px;
         }
 
@@ -189,14 +202,13 @@
             width: 100%;
             max-width: 1000px;
             text-align: center;
-            margin-top: 30px; /* Уменьшено с 60px до 30px */
-           /*  transform: perspective(800px) rotateX(20deg); */
+            margin-top: 30px;
             transform-origin: bottom center;
             padding: 0 20px;
         }
 
         .info-row {
-            margin: 12px 0; /* Уменьшено с 15px до 12px */
+            margin: 12px 0;
         }
 
         .info-label {
@@ -204,7 +216,7 @@
             text-transform: uppercase;
             letter-spacing: 0.15em;
             color: rgba(255, 215, 0, 0.7);
-            margin-bottom: 4px; /* Уменьшено с 5px до 4px */
+            margin-bottom: 4px;
             font-weight: 600;
         }
 
@@ -218,8 +230,49 @@
         .id-value {
             font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.4);
-            margin-top: 20px; /* Уменьшено с 30px до 20px */
+            margin-top: 20px;
             letter-spacing: 0.1em;
+        }
+
+        /* Футер с информацией */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            width: 100%;
+        }
+
+        /* Разделительная линия перед футером */
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            line-height: 1.4;
+        }
+
+        .footer-link {
+            color: rgba(255, 215, 0, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: rgba(255, 215, 0, 0.9);
+            text-decoration: underline;
         }
 
         @keyframes fadeIn {
@@ -269,16 +322,16 @@
             }
 
             .text-top {
-                margin-bottom: 25px; /* Уменьшено с 50px до 25px */
+                margin-bottom: 25px;
             }
 
             .text-bottom {
-                margin-top: 25px; /* Уменьшено с 50px до 25px */
+                margin-top: 25px;
             }
 
             .image-container {
                 max-width: 700px;
-                margin: 15px 0; /* Уменьшено */
+                margin: 15px 0;
             }
         }
 
@@ -294,18 +347,18 @@
             }
 
             .text-top {
-                margin-bottom: 20px; /* Уменьшено с 40px до 20px */
-                transform: perspective(500px) rotateX(-15deg);
+                margin-bottom: 20px;
+                transform: perspective(500px) rotateX(-35deg);
             }
 
             .text-bottom {
-                margin-top: 20px; /* Уменьшено с 40px до 20px */
-                transform: perspective(500px) rotateX(15deg);
+                margin-top: 20px;
+             /*   transform: perspective(500px) rotateX(15deg);*/
             }
 
             .image-container {
                 max-width: 100%;
-                margin: 15px 0; /* Уменьшено */
+                margin: 15px 0;
             }
 
             .image-mask {
@@ -313,7 +366,16 @@
             }
 
             .info-row {
-                margin: 10px 0; /* Уменьшено */
+                margin: 10px 0;
+            }
+
+            .footer {
+                bottom: 15px;
+            }
+
+            .footer-text {
+                font-size: 0.6rem;
+                padding: 0 10px;
             }
         }
 
@@ -323,19 +385,23 @@
             }
 
             .text-top {
-                margin-bottom: 15px; /* Уменьшено с 30px до 15px */
+                margin-bottom: 15px;
             }
 
             .text-bottom {
-                margin-top: 15px; /* Уменьшено с 30px до 15px */
+                margin-top: 15px;
             }
 
             .info-row {
-                margin: 8px 0; /* Уменьшено с 12px до 8px */
+                margin: 8px 0;
             }
 
             .id-value {
-                margin-top: 15px; /* Уменьшено */
+                margin-top: 15px;
+            }
+
+            .footer {
+                bottom: 10px;
             }
         }
 
@@ -367,6 +433,12 @@
 
         <div id="app">
             <div class="loading">Загрузка произведения...</div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">
+                Обновите страницу, чтобы увидеть новое произведение. Автор: <a href="https://www.dying.fun" class="footer-link" target="_blank">Михаил Максимов</a>
+            </div>
         </div>
     </div>
 
