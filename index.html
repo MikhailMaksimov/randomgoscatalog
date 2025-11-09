@@ -114,7 +114,7 @@
             max-width: 900px;
             text-align: center;
             margin-bottom: -60px;
-            transform: perspective(100px) rotateX(-15deg);
+            transform: perspective(800px) rotateX(-45deg);
             transform-origin: top center;
             padding: 0 20px;
             position: relative;
@@ -138,9 +138,11 @@
             background-clip: text;
             margin-bottom: 10px;
             line-height: 1.1;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             letter-spacing: 0.03em;
             width: 100%;
+            /* Градиентная тень - светлая сверху, прозрачная снизу */
+            /* filter: drop-shadow(0 -2px 8px rgba(255, 215, 0, 0)) */
+             /*        drop-shadow(0 0 12px rgba(255, 215, 0, 0));*/
         }
 
         .author {
@@ -378,7 +380,7 @@
 
             .text-top {
                 margin-bottom: -40px;
-                transform: perspective(100px) rotateX(-15deg);
+                transform: perspective(500px) rotateX(-35deg);
                 min-height: 80px;
                 max-height: 80px;
             }
