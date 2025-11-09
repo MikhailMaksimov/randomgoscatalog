@@ -57,32 +57,97 @@
 
         .header {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
+            inset: 0;
             z-index: 10;
+            pointer-events: none;
+            overflow: hidden;
         }
 
         .header p {
+            position: absolute;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.2em;
             font-weight: 300;
-            margin-bottom: 10px;
+            white-space: nowrap;
+            margin: 0;
         }
 
-        /* Разделительная линия после заголовка */
+        /* Верхняя полоса - движется влево */
+        .header-top {
+            top: 20px;
+            left: 0;
+            width: max-content;
+            animation: scrollLeft 60s linear infinite;
+        }
+
+        /* Правая полоса - движется вниз */
+        .header-right {
+            right: 20px;
+            top: 0;
+            writing-mode: vertical-rl;
+            height: max-content;
+            animation: scrollDown 60s linear infinite;
+        }
+
+        /* Нижняя полоса - движется вправо */
+        .header-bottom {
+            bottom: 80px;
+            right: 0;
+            width: max-content;
+            animation: scrollRight 60s linear infinite;
+        }
+
+        /* Левая полоса - движется вверх */
+        .header-left {
+            left: 20px;
+            bottom: 0;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            height: max-content;
+            animation: scrollUp 60s linear infinite;
+        }
+
+        @keyframes scrollLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes scrollRight {
+            0% {
+                transform: translateX(-50%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scrollDown {
+            0% {
+                transform: translateY(-50%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scrollUp {
+            0% {
+                transform: rotate(180deg) translateY(0);
+            }
+            100% {
+                transform: rotate(180deg) translateY(-50%);
+            }
+        }
+
+        /* Удаляем старые стили */
         .header::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
+            display: none;
         }
 
         .loading {
@@ -119,7 +184,7 @@
             font-family: 'Rubik Mono One', monospace;
             font-size: clamp(1.5rem, 4vw, 3rem);
             font-weight: 400;
-            background: linear-gradient(to bottom, #e31227, #54070f);
+            background: linear-gradient(to bottom, #e31227, #730b16);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -353,7 +418,22 @@
 
             .header p {
                 font-size: 0.65rem;
-                padding: 0 10px;
+            }
+
+            .header-top {
+                top: 10px;
+            }
+
+            .header-right {
+                right: 10px;
+            }
+
+            .header-bottom {
+                bottom: 60px;
+            }
+
+            .header-left {
+                left: 10px;
             }
 
             .text-top {
@@ -438,7 +518,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <p>Случайные произведения из каталога российских музеев</p>
+            <p class="header-top">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
+            <p class="header-right">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
+            <p class="header-bottom">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
+            <p class="header-left">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
         </div>
 
         <div id="app">
