@@ -1,2 +1,2 @@
 # randomgoscatalog
-Shows Random Object From Gos Catalog
+Shown Random Object from GosCatalog
