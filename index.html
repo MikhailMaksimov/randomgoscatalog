@@ -82,33 +82,6 @@
             animation: scrollLeft 60s linear infinite;
         }
 
-        /* Правая полоса - движется вниз */
-        .header-right {
-            right: 20px;
-            top: 0;
-            writing-mode: vertical-rl;
-            height: max-content;
-            animation: scrollDown 60s linear infinite;
-        }
-
-        /* Нижняя полоса - движется вправо */
-        .header-bottom {
-            bottom: 80px;
-            right: 0;
-            width: max-content;
-            animation: scrollRight 60s linear infinite;
-        }
-
-        /* Левая полоса - движется вверх */
-        .header-left {
-            left: 20px;
-            bottom: 0;
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            height: max-content;
-            animation: scrollUp 60s linear infinite;
-        }
-
         @keyframes scrollLeft {
             0% {
                 transform: translateX(0);
@@ -116,38 +89,6 @@
             100% {
                 transform: translateX(-50%);
             }
-        }
-
-        @keyframes scrollRight {
-            0% {
-                transform: translateX(-50%);
-            }
-            100% {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes scrollDown {
-            0% {
-                transform: translateY(-50%);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes scrollUp {
-            0% {
-                transform: rotate(180deg) translateY(0);
-            }
-            100% {
-                transform: rotate(180deg) translateY(-50%);
-            }
-        }
-
-        /* Удаляем старые стили */
-        .header::after {
-            display: none;
         }
 
         .loading {
@@ -178,28 +119,37 @@
             padding: 0 20px;
             position: relative;
             z-index: 3;
+            /* Фиксированная максимальная высота блока */
+            min-height: 120px;
+            max-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .title {
             font-family: 'Rubik Mono One', monospace;
-            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-size: clamp(1rem, 3vw, 2.5rem);
             font-weight: 400;
             background: linear-gradient(to bottom, #e31227, #730b16);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
-            line-height: 1.2;
+            margin-bottom: 10px;
+            line-height: 1.1;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
+            width: 100%;
         }
 
         .author {
             font-family: 'Rubik Mono One', monospace;
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-size: clamp(0.8rem, 1.5vw, 1.2rem);
             color: rgba(255, 255, 255, 0.9);
             font-weight: 400;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.05em;
+            width: 100%;
         }
 
         /* Изображение с прямоугольной маской */
@@ -398,6 +348,8 @@
 
             .text-top {
                 margin-bottom: -50px;
+                min-height: 100px;
+                max-height: 100px;
             }
 
             .text-bottom {
@@ -424,21 +376,11 @@
                 top: 10px;
             }
 
-            .header-right {
-                right: 10px;
-            }
-
-            .header-bottom {
-                bottom: 60px;
-            }
-
-            .header-left {
-                left: 10px;
-            }
-
             .text-top {
                 margin-bottom: -40px;
                 transform: perspective(500px) rotateX(-35deg);
+                min-height: 80px;
+                max-height: 80px;
             }
 
             .text-bottom {
@@ -476,6 +418,8 @@
 
             .text-top {
                 margin-bottom: -30px;
+                min-height: 70px;
+                max-height: 70px;
             }
 
             .text-bottom {
@@ -519,9 +463,6 @@
     <div class="container">
         <div class="header">
             <p class="header-top">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
-            <p class="header-right">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
-            <p class="header-bottom">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
-            <p class="header-left">Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • Случайные произведения из каталога российских музеев • </p>
         </div>
 
         <div id="app">
