@@ -119,7 +119,10 @@
             font-family: 'Rubik Mono One', monospace;
             font-size: clamp(1.5rem, 4vw, 3rem);
             font-weight: 400;
-            color: #e31227;
+            background: linear-gradient(to bottom, #e31227, #54070f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 15px;
             line-height: 1.2;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
@@ -261,7 +264,7 @@
             transform: translateX(-50%);
             width: 100px;
             height: 1px;
-            background: linear-gradient(90, transparent, rgba(255, 215, 0, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
         }
 
         .footer-text {
