@@ -103,6 +103,7 @@
             color: white;
             font-size: 1.2rem;
             animation: pulse 1.5s ease-in-out infinite;
+            font-family: 'Rubik Mono One', monospace;
         }
 
         .artwork-container {
@@ -115,23 +116,23 @@
             animation: fadeIn 1s ease-in;
         }
 
-        /* Верхний текст (название и автор) - уходит ВНИЗ к изображению */
+        /* Верхний текст (название и автор) - ФИКСИРОВАННОЕ позиционирование */
         .text-top {
+            position: fixed;
+            top: 80px; /* Стартовый отступ от бегущей строки */
+            left: 50%;
+            transform: translateX(-50%) perspective(800px) rotateX(-45deg);
+            transform-origin: top center;
             width: 100%;
             max-width: 900px;
             text-align: center;
-            margin-bottom: -60px;
-            transform: perspective(800px) rotateX(-45deg);
-            transform-origin: top center;
-            padding: 0 20px;
-            position: relative;
             z-index: 3;
-            min-height: 120px;
-            max-height: 120px;
+            padding: 0 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            pointer-events: none;
         }
 
         .title {
@@ -146,6 +147,8 @@
             letter-spacing: 0.03em;
             width: 100%;
             /* Размер устанавливается через JavaScript */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .author {
@@ -155,6 +158,8 @@
             font-weight: 400;
             letter-spacing: 0.05em;
             width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Изображение с прямоугольной маской */
@@ -352,9 +357,8 @@
             }
 
             .text-top {
-                margin-bottom: -50px;
-                min-height: 100px;
-                max-height: 100px;
+                top: 70px;
+                max-width: 700px;
             }
 
             .text-bottom {
@@ -382,10 +386,9 @@
             }
 
             .text-top {
-                margin-bottom: -40px;
-                transform: perspective(500px) rotateX(-35deg);
-                min-height: 80px;
-                max-height: 80px;
+                top: 50px;
+                transform: translateX(-50%) perspective(500px) rotateX(-35deg);
+                max-width: 100%;
             }
 
             .text-bottom {
@@ -421,9 +424,7 @@
             }
 
             .text-top {
-                margin-bottom: -30px;
-                min-height: 70px;
-                max-height: 70px;
+                top: 45px;
             }
 
             .text-bottom {
@@ -470,7 +471,7 @@
         </div>
 
         <div id="app">
-            <div class="loading">Загрузка произведения...</div>
+            <div class="loading">живу-вижу</div>
         </div>
 
         <div class="footer">
@@ -490,7 +491,7 @@
             return id ? `${FUNCTION_URL}/proxy/${id}` : '';
         }
 
-        // Функция для вычисления размера шрифта заголовка
+        // Функция для вычисления размера шрифта заголовка с учетом перспективы
         function calculateTitleFontSize(titleLength) {
             const isMobile = window.innerWidth <= 768;
             
@@ -516,6 +517,94 @@
             return minSize * multiplier;
         }
 
+        // Функция для вычисления высоты заголовка с учетом перспективы
+        function calculateTitleHeight(name, fontSize) {
+            const tempElement = document.createElement('div');
+            tempElement.style.cssText = `
+                position: absolute;
+                left: -9999px;
+                top: -9999px;
+                width: 900px;
+                max-width: 90vw;
+                font-family: 'Rubik Mono One', monospace;
+                font-size: ${fontSize}rem;
+                line-height: 1.1;
+                letter-spacing: 0.03em;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                padding: 0 20px;
+                text-align: center;
+                transform: perspective(800px) rotateX(-45deg);
+                transform-origin: top center;
+            `;
+            tempElement.textContent = name;
+            
+            document.body.appendChild(tempElement);
+            const height = tempElement.offsetHeight;
+            document.body.removeChild(tempElement);
+            
+            return height;
+        }
+
+        // Функция для вычисления количества строк в заголовке
+        function calculateTitleLines(name, fontSize) {
+            const tempElement = document.createElement('div');
+            tempElement.style.cssText = `
+                position: absolute;
+                left: -9999px;
+                top: -9999px;
+                width: 900px;
+                max-width: 90vw;
+                font-family: 'Rubik Mono One', monospace;
+                font-size: ${fontSize}rem;
+                line-height: 1.1;
+                letter-spacing: 0.03em;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                padding: 0 20px;
+                text-align: center;
+            `;
+            tempElement.textContent = name;
+            
+            document.body.appendChild(tempElement);
+            const height = tempElement.offsetHeight;
+            document.body.removeChild(tempElement);
+            
+            // Вычисляем примерную высоту одной строки (fontSize * line-height в пикселях)
+            const lineHeight = fontSize * 1.1 * 16; // переводим rem в px
+            const estimatedLines = Math.ceil(height / lineHeight);
+            
+            return estimatedLines;
+        }
+
+        // Функция для вычисления динамического отступа заголовка
+        function calculateTitleTopOffset(titleHeight, titleLines, imageUrl) {
+            const isMobile = window.innerWidth <= 768;
+            const isTablet = window.innerWidth <= 1024;
+            
+            // Базовый отступ от бегущей строки
+            let baseOffset;
+            if (isMobile) {
+                baseOffset = 50;
+            } else if (isTablet) {
+                baseOffset = 70;
+            } else {
+                baseOffset = 80;
+            }
+
+            // Увеличиваем отступ для длинных заголовков
+            let offsetMultiplier = 1;
+            if (titleHeight > 150) {
+                offsetMultiplier = 1.8;
+            } else if (titleHeight > 120) {
+                offsetMultiplier = 1.5;
+            } else if (titleHeight > 90) {
+                offsetMultiplier = 1.2;
+            }
+
+            return baseOffset * offsetMultiplier;
+        }
+
         function renderArtwork(artwork) {
             const data = artwork.data || {};
             
@@ -527,6 +616,13 @@
             const titleLength = name.length;
             const fontSize = calculateTitleFontSize(titleLength);
             
+            // Вычисляем высоту заголовка и количество строк
+            const titleHeight = calculateTitleHeight(name, fontSize);
+            const titleLines = calculateTitleLines(name, fontSize);
+            
+            // Вычисляем динамический отступ
+            const titleTopOffset = calculateTitleTopOffset(titleHeight, titleLines, imageUrl);
+
             let authors = '';
             if (data.authors) {
                 if (Array.isArray(data.authors)) {
@@ -544,12 +640,25 @@
             const period = data.periodStr || '';
             const nativeId = artwork.nativeId || data.id || '';
 
-            console.log('Rendering artwork:', { name, titleLength, fontSize, authors, technologies, museum, period, nativeId, imageUrl });
+            console.log('Rendering artwork:', { 
+                name, 
+                titleLength, 
+                fontSize, 
+                titleHeight,
+                titleLines,
+                titleTopOffset,
+                authors, 
+                technologies, 
+                museum, 
+                period, 
+                nativeId, 
+                imageUrl 
+            });
 
             return `
                 <div class="artwork-container">
-                    <!-- Верхний текст - уходит вниз к изображению -->
-                    <div class="text-top">
+                    <!-- Верхний текст - ФИКСИРОВАННОЕ позиционирование -->
+                    <div class="text-top" style="top: ${titleTopOffset}px;">
                         <h1 class="title" style="font-size: ${fontSize}rem;">${name}</h1>
                         ${authors ? `<div class="author">${authors}</div>` : ''}
                     </div>
@@ -560,7 +669,7 @@
                             ${imageUrl ? `
                                 <img src="${imageUrl}" 
                                      alt="${name}" 
-                                     onload="this.classList.add('image-reveal')"
+                                     onload="this.classList.add('image-reveal'); adjustForVerticalImage(this, ${titleLines}, ${titleTopOffset})"
                                      onerror="console.log('❌ Изображение недоступно, перезагружаем...'); setTimeout(() => location.reload(), 500);">
                             ` : '<div class="no-image">Изображение отсутствует</div>'}
                         </div>
@@ -595,6 +704,41 @@
             `;
         }
 
+        // Функция для корректировки отступа для вертикальных изображений
+        function adjustForVerticalImage(imgElement, titleLines, currentOffset) {
+            const aspectRatio = imgElement.naturalWidth / imgElement.naturalHeight;
+            console.log('📐 Aspect ratio изображения после загрузки:', aspectRatio);
+            console.log('📊 Количество строк заголовка:', titleLines);
+            
+            const textTopElement = document.querySelector('.text-top');
+            
+            // Проверяем условие: вертикальное изображение (aspect ratio < 0.75) + много строк (>4)
+            if (aspectRatio < 0.75 && titleLines > 4) {
+                // Вычисляем множитель: 1.5 / aspect ratio
+                const aspectMultiplier = 1.5 / aspectRatio;
+                console.log('🎯 Условие выполнено: вертикальное изображение + много строк');
+                console.log('📈 Множитель отступа:', aspectMultiplier.toFixed(2));
+                
+                const isMobile = window.innerWidth <= 768;
+                const isTablet = window.innerWidth <= 1024;
+                
+                // Базовый отступ от бегущей строки
+                let baseOffset;
+                if (isMobile) {
+                    baseOffset = 50;
+                } else if (isTablet) {
+                    baseOffset = 70;
+                } else {
+                    baseOffset = 80;
+                }
+                
+                // Применяем множитель aspect ratio
+                const adjustedOffset = baseOffset * aspectMultiplier;
+                textTopElement.style.top = `${adjustedOffset}px`;
+                console.log('🔼 Отступ заголовка увеличен с', currentOffset, 'до', Math.round(adjustedOffset));
+            }
+        }
+
         async function loadRandomArtwork() {
             const app = document.getElementById('app');
             
@@ -619,7 +763,7 @@
                 }
             } catch (error) {
                 console.error('❌ Ошибка:', error);
-                app.innerHTML = `<div class="loading">Ошибка загрузки, повторная попытка</div>`;
+                app.innerHTML = `<div class="loading">живу-вижу</div>`;
                 setTimeout(() => location.reload(), 1000);
             }
         }
@@ -627,10 +771,18 @@
         // Пересчитываем размер при изменении размера окна
         window.addEventListener('resize', () => {
             const titleElement = document.querySelector('.title');
-            if (titleElement) {
+            const textTopElement = document.querySelector('.text-top');
+            const imgElement = document.querySelector('.image-mask img');
+            
+            if (titleElement && textTopElement) {
                 const titleLength = titleElement.textContent.length;
                 const fontSize = calculateTitleFontSize(titleLength);
+                const titleHeight = calculateTitleHeight(titleElement.textContent, fontSize);
+                const titleLines = calculateTitleLines(titleElement.textContent, fontSize);
+                const titleTopOffset = calculateTitleTopOffset(titleHeight, titleLines, imgElement ? imgElement.src : '');
+                
                 titleElement.style.fontSize = `${fontSize}rem`;
+                textTopElement.style.top = `${titleTopOffset}px`;
             }
         });
 
