@@ -8,6 +8,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Минимальный размер заголовка для десктопа (увеличен в 1.5 раза от исходного 1rem) */
+            --title-min-desktop: 1.5rem;
+            /* Минимальный размер заголовка для мобильных (автоматически в 1.5 раза больше десктопного) */
+            --title-min-mobile: calc(var(--title-min-desktop) * 1.5);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -119,7 +126,6 @@
             padding: 0 20px;
             position: relative;
             z-index: 3;
-            /* Фиксированная максимальная высота блока */
             min-height: 120px;
             max-height: 120px;
             display: flex;
@@ -130,7 +136,6 @@
 
         .title {
             font-family: 'Rubik Mono One', monospace;
-            font-size: clamp(1rem, 3vw, 2.5rem);
             font-weight: 400;
             background: linear-gradient(to bottom, #e31227, #730b16);
             -webkit-background-clip: text;
@@ -140,9 +145,7 @@
             line-height: 1.1;
             letter-spacing: 0.03em;
             width: 100%;
-            /* Градиентная тень - светлая сверху, прозрачная снизу */
-            /* filter: drop-shadow(0 -2px 8px rgba(255, 215, 0, 0)) */
-             /*        drop-shadow(0 0 12px rgba(255, 215, 0, 0));*/
+            /* Размер устанавливается через JavaScript */
         }
 
         .author {
@@ -387,7 +390,6 @@
 
             .text-bottom {
                 margin-top: 20px;
-             /*   transform: perspective(500px) rotateX(15);*/
             }
 
             .image-container {
@@ -488,6 +490,32 @@
             return id ? `${FUNCTION_URL}/proxy/${id}` : '';
         }
 
+        // Функция для вычисления размера шрифта заголовка
+        function calculateTitleFontSize(titleLength) {
+            const isMobile = window.innerWidth <= 768;
+            
+            // Получаем минимальный размер из CSS переменных
+            const rootStyles = getComputedStyle(document.documentElement);
+            const minDesktop = parseFloat(rootStyles.getPropertyValue('--title-min-desktop'));
+            const minMobile = parseFloat(rootStyles.getPropertyValue('--title-min-mobile'));
+            
+            const minSize = isMobile ? minMobile : minDesktop;
+            
+            let multiplier;
+            
+            if (titleLength <= 20) {
+                multiplier = 2.5;
+            } else if (titleLength <= 40) {
+                multiplier = 2;
+            } else if (titleLength <= 50) {
+                multiplier = 1.5;
+            } else {
+                multiplier = 1;
+            }
+            
+            return minSize * multiplier;
+        }
+
         function renderArtwork(artwork) {
             const data = artwork.data || {};
             
@@ -496,6 +524,8 @@
                 : '';
 
             const name = data.name || 'Без названия';
+            const titleLength = name.length;
+            const fontSize = calculateTitleFontSize(titleLength);
             
             let authors = '';
             if (data.authors) {
@@ -514,13 +544,13 @@
             const period = data.periodStr || '';
             const nativeId = artwork.nativeId || data.id || '';
 
-            console.log('Rendering artwork:', { name, authors, technologies, museum, period, nativeId, imageUrl });
+            console.log('Rendering artwork:', { name, titleLength, fontSize, authors, technologies, museum, period, nativeId, imageUrl });
 
             return `
                 <div class="artwork-container">
                     <!-- Верхний текст - уходит вниз к изображению -->
                     <div class="text-top">
-                        <h1 class="title">${name}</h1>
+                        <h1 class="title" style="font-size: ${fontSize}rem;">${name}</h1>
                         ${authors ? `<div class="author">${authors}</div>` : ''}
                     </div>
 
@@ -593,6 +623,16 @@
                 setTimeout(() => location.reload(), 1000);
             }
         }
+
+        // Пересчитываем размер при изменении размера окна
+        window.addEventListener('resize', () => {
+            const titleElement = document.querySelector('.title');
+            if (titleElement) {
+                const titleLength = titleElement.textContent.length;
+                const fontSize = calculateTitleFontSize(titleLength);
+                titleElement.style.fontSize = `${fontSize}rem`;
+            }
+        });
 
         window.addEventListener('DOMContentLoaded', loadRandomArtwork);
     </script>
